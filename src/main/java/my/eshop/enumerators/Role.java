@@ -1,5 +1,5 @@
 package my.eshop.enumerators;
 
 public enum Role {
-    GUEST, USER, ADMIN
+    GUEST, USER, SELLER, ADMIN
 }

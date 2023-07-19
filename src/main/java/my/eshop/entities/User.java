@@ -6,6 +6,7 @@ import lombok.Setter;
 import my.eshop.enumerators.Role;
 
 import javax.persistence.*;
+import java.math.BigInteger;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
@@ -30,6 +31,8 @@ public class User {
     private String surname;
     @Column
     private String address;
+    @Column
+    private BigInteger phone;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Item> items;
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)

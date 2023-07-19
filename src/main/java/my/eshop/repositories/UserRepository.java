@@ -1,7 +1,10 @@
 package my.eshop.repositories;
 
+import my.eshop.entities.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.security.core.userdetails.User;
 
 public interface UserRepository extends JpaRepository<User, String> {
+
+    User findByEmail(String email);
+
 }

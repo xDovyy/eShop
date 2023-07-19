@@ -9,6 +9,5 @@ public class ItemDTO {
     private Float price;
     private String description;
     private String quantity;
-    private UserDTO seller;
 
 }
