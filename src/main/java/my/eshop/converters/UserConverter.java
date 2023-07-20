@@ -2,6 +2,7 @@ package my.eshop.converters;
 
 import my.eshop.dtos.UserDTO;
 import my.eshop.entities.User;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,15 +31,22 @@ public class UserConverter {
         if (userList != null && !userList.isEmpty()){
             List<UserDTO> userDTOList = new ArrayList<>();
             for (User user:userList){
-                UserDTO userDTO = new UserDTO();
-                userDTO.setName(user.getName());
-                userDTO.setEmail(user.getEmail());
-                userDTO.setSurname(user.getSurname());
-                userDTOList.add(userDTO);
+                userDTOList.add(userTouserDTO(user));
             }
             return userDTOList;
         }
         throw new IllegalArgumentException();
+    }
+
+    public static List<UserDTO> userListTouserDTOList(Page<User> userPage) {
+        List<UserDTO> userDtoList = null;
+        if (userPage != null && !userPage.isEmpty()) {
+            userDtoList = new ArrayList<>();
+            for (User user : userPage) {
+                userDtoList.add(userTouserDTO(user));
+            }
+        }
+        return userDtoList;
     }
 
 }
