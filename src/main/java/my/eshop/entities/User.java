@@ -35,7 +35,7 @@ public class User {
     private BigInteger phone;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Item> items;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
     private List<Order> orders;
     @Enumerated(EnumType.STRING)
     private Role role;
