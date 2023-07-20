@@ -6,6 +6,5 @@ import lombok.Data;
 public class OrderDTO {
 
     private Integer quantity;
-    private Boolean isCompleted;
 
 }

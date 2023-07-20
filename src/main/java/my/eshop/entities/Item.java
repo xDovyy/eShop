@@ -27,7 +27,7 @@ public class Item {
     @Column
     private String description;
     @Column(nullable = false)
-    private String quantity;
+    private Integer quantity;
     @ManyToOne
     private User seller;
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)

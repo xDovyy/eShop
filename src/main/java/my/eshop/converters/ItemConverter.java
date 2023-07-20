@@ -1,7 +1,10 @@
 package my.eshop.converters;
 
 import my.eshop.dtos.ItemDTO;
+import my.eshop.dtos.OrderDTO;
 import my.eshop.entities.Item;
+import my.eshop.entities.Order;
+import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,17 @@ public class ItemConverter {
             return itemDTOList;
         }
         throw new IllegalArgumentException();
+    }
+
+    public static List<ItemDTO> itemListToItemDTOList(Page<Item> itemPage) {
+        List<ItemDTO> itemDTOList = null;
+        if (itemPage != null && !itemPage.isEmpty()) {
+            itemDTOList = new ArrayList<>();
+            for (Item item : itemPage) {
+                itemDTOList.add(itemToItemDTO(item));
+            }
+        }
+        return itemDTOList;
     }
 
 }

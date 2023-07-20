@@ -8,6 +8,6 @@ public class ItemDTO {
     private String name;
     private Float price;
     private String description;
-    private String quantity;
+    private Integer quantity;
 
 }

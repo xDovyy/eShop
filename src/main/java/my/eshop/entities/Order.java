@@ -3,6 +3,7 @@ package my.eshop.entities;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
+import my.eshop.enumerators.OrderStatus;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
@@ -20,12 +21,14 @@ public class Order {
     private UUID id;
     @Column(nullable = false)
     private Integer quantity;
+    @Column
+    private String address;
     @ManyToOne
     private User user;
     @ManyToOne
     private Item item;
-    @Column(nullable = false)
-    private Boolean isCompleted;
+    @Enumerated(EnumType.STRING)
+    private OrderStatus status;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

@@ -1,5 +1,6 @@
 package my.eshop.controllers;
 
+import my.eshop.converters.UserConverter;
 import my.eshop.dtos.CreateUserDTO;
 import my.eshop.dtos.UserDTO;
 import my.eshop.entities.User;
@@ -38,6 +39,17 @@ public class UserController {
         }
         catch (DuplicateEmailException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(createUserDTO);
+        }
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<UserDTO> getUserById(@PathVariable("id") UUID id){
+        try {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .body(UserConverter.userTouserDTO(this.userService.getUserById(id)));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
     }
 
