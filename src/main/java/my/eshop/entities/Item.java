@@ -28,10 +28,14 @@ public class Item {
     private String description;
     @Column(nullable = false)
     private Integer quantity;
+    @ManyToOne(optional = false)
+    private Category category;
     @ManyToOne
     private User seller;
     @OneToMany(mappedBy = "item", cascade = CascadeType.ALL)
     private List<Order> orders;
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
     @Column(name = "created_at")
     private LocalDateTime createdAt;
     @Column(name = "updated_at")

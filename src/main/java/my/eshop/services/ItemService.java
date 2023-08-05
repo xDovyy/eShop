@@ -1,10 +1,12 @@
 package my.eshop.services;
 
+import lombok.AllArgsConstructor;
 import my.eshop.converters.ItemConverter;
-import my.eshop.converters.OrderConverter;
 import my.eshop.dtos.ItemDTO;
+import my.eshop.entities.Category;
 import my.eshop.entities.Item;
 import my.eshop.entities.User;
+import my.eshop.repositories.CategoryRepository;
 import my.eshop.repositories.ItemRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -14,20 +16,34 @@ import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class ItemService {
 
     private ItemRepository itemRepository;
+    private CategoryRepository categoryRepository;
 
     public ItemDTO createItem(User user, ItemDTO itemDTO){
         Item item = ItemConverter.itemDTOToItem(itemDTO);
+        if (itemDTO.getCategory() == null) throw new IllegalArgumentException();
+        itemDTO.setCategory(itemDTO.getCategory().toLowerCase());
+        if (categoryRepository.findById(itemDTO.getCategory()).isPresent()){
+            item.setCategory(categoryRepository.findById(itemDTO.getCategory()).orElse(null));
+        }
+        else {
+            Category category = new Category();
+            category.setName(itemDTO.getCategory().toLowerCase());
+            this.categoryRepository.save(category);
+            item.setCategory(category);
+        }
         item.setSeller(user);
-        itemRepository.saveAndFlush(item);
+        this.categoryRepository.flush();
+        this.itemRepository.saveAndFlush(item);
         return itemDTO;
     }
 
     public Item getItemById(UUID id){
         if (id == null) throw new IllegalArgumentException();
-        return itemRepository.findById(id).orElse(null);
+        return itemRepository.findByID(id);
     }
 
     public List<ItemDTO> getItems(Pageable pageable){
@@ -37,8 +53,8 @@ public class ItemService {
         return ItemConverter.itemListToItemDTOList(itemRepository.findAll());
     }
 
-    public ItemDTO updateItem(UUID id, ItemDTO itemDTO){
-        Item item = getItemById(id);
+    public ItemDTO updateItem(ItemDTO itemDTO){
+        Item item = getItemById(itemDTO.getId());
         if (item == null) throw new NoSuchElementException();
         if (itemDTO.getQuantity() != null) item.setQuantity(itemDTO.getQuantity());
         if (itemDTO.getPrice() != null) item.setPrice(itemDTO.getPrice());
@@ -51,8 +67,14 @@ public class ItemService {
     public ItemDTO deleteItem(UUID id){
         Item item = getItemById(id);
         if (item == null) throw new NoSuchElementException();
-        itemRepository.delete(item);
+        item.setIsDeleted(true);
+        itemRepository.saveAndFlush(item);
         return ItemConverter.itemToItemDTO(item);
     }
 
+    public boolean checkIfSeller(UUID id, UUID id1) {
+        Item item = itemRepository.findById(id1).orElse(null);
+        if (item == null) throw new NoSuchElementException();
+        return item.getSeller().getId() == id;
+    }
 }

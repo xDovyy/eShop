@@ -18,6 +18,8 @@ public class ItemConverter {
         itemDTO.setPrice(item.getPrice());
         itemDTO.setDescription(item.getDescription());
         itemDTO.setQuantity(item.getQuantity());
+        itemDTO.setId(item.getId());
+        itemDTO.setCategory(item.getCategory().getName());
         return itemDTO;
     }
 

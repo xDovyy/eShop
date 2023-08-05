@@ -33,9 +33,11 @@ public class User {
     private String address;
     @Column
     private BigInteger phone;
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
     @OneToMany(mappedBy = "seller", cascade = CascadeType.ALL)
     private List<Item> items;
-    @OneToMany(mappedBy = "user", cascade = CascadeType.DETACH)
+    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Order> orders;
     @Enumerated(EnumType.STRING)
     private Role role;

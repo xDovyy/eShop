@@ -24,7 +24,7 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/orders")
-@PreAuthorize("hasAnyRole('ADMIN')")
+@PreAuthorize("hasAnyRole('USER')")
 public class OrderController {
 
     @Autowired
@@ -48,6 +48,7 @@ public class OrderController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<OrderDTO> getOrderById(@PathVariable("id") UUID id){
         try {
             return ResponseEntity.status(HttpStatus.FOUND)
@@ -59,6 +60,7 @@ public class OrderController {
     }
 
     @GetMapping
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<List<OrderDTO>> getAllOrders(Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.FOUND)
@@ -70,6 +72,7 @@ public class OrderController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") UUID id, @RequestBody OrderDTO orderDTO){
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED)
@@ -81,6 +84,7 @@ public class OrderController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<OrderDTO> deleteOrder(@PathVariable("id") UUID id){
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED)

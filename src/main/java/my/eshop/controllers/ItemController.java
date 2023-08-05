@@ -2,7 +2,9 @@ package my.eshop.controllers;
 
 import my.eshop.converters.ItemConverter;
 import my.eshop.dtos.ItemDTO;
+import my.eshop.entities.Item;
 import my.eshop.entities.User;
+import my.eshop.enumerators.Role;
 import my.eshop.services.ItemService;
 import my.eshop.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +22,6 @@ import java.util.UUID;
 @CrossOrigin
 @RestController
 @RequestMapping("/items")
-@PreAuthorize("hasAnyRole('ADMIN')")
 public class ItemController {
 
     @Autowired
@@ -29,6 +30,7 @@ public class ItemController {
     private UserService userService;
 
     @PostMapping
+    @PreAuthorize("hasRole('SELLER')")
     public ResponseEntity<ItemDTO> createItem(@RequestBody ItemDTO itemDTO) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getUserByEmail(auth.getName());
@@ -63,22 +65,50 @@ public class ItemController {
         }
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ItemDTO> updateItem(@PathVariable("id") UUID id, @RequestBody ItemDTO itemDTO){
+    @GetMapping("/user")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<List<ItemDTO>> getUserItems(@RequestParam(value = "id", required = false) UUID userId){
+        try{
+            if (userId != null) return ResponseEntity.status(HttpStatus.FOUND).body(ItemConverter.itemListToItemDTOList(userService.getUserById(userId).getItems()));
+            Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+            User user = userService.getUserByEmail(auth.getName());
+            List<Item> itemList = user.getItems();
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .body(ItemConverter.itemListToItemDTOList(itemList));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping()
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<ItemDTO> updateItem(@RequestBody ItemDTO itemDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
         try {
+            if (user.getRole() != Role.ADMIN || !itemService.checkIfSeller(user.getId(), itemDTO.getId())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(itemDTO);
+            }
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(itemService.updateItem(id, itemDTO));
+                    .body(itemService.updateItem(itemDTO));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(itemDTO);
         }
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<ItemDTO> deleteItem(@PathVariable("id") UUID id){
+    @DeleteMapping()
+    @PreAuthorize("hasRole('SELLER')")
+    public ResponseEntity<ItemDTO> deleteItem(@RequestBody ItemDTO itemDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
         try {
+            if (user.getRole() != Role.ADMIN || !itemService.checkIfSeller(user.getId(), itemDTO.getId())){
+                return ResponseEntity.status(HttpStatus.FORBIDDEN).body(itemDTO);
+            }
             return ResponseEntity.status(HttpStatus.ACCEPTED)
-                    .body(itemService.deleteItem(id));
+                    .body(itemService.deleteItem(itemDTO.getId()));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

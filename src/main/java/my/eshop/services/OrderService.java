@@ -1,5 +1,6 @@
 package my.eshop.services;
 
+import lombok.AllArgsConstructor;
 import my.eshop.converters.OrderConverter;
 import my.eshop.dtos.OrderDTO;
 import my.eshop.entities.Item;
@@ -15,6 +16,7 @@ import java.util.List;
 import java.util.UUID;
 
 @Service
+@AllArgsConstructor
 public class OrderService {
 
     private OrderRepository orderRepository;
@@ -28,12 +30,14 @@ public class OrderService {
         order.setUser(user);
         item.setQuantity(item.getQuantity() - orderDTO.getQuantity());
         order.setItem(item);
+        order.setTotalPrice(orderDTO.getQuantity() * item.getPrice());
         orderRepository.saveAndFlush(order);
+        orderDTO.setId(order.getId());
         return orderDTO;
     }
 
     public Order getOrderById(UUID id){
-        if (id != null) return orderRepository.findById(id).orElse(null);
+        if (id != null) return orderRepository.findByID(id);
         throw new IllegalArgumentException();
     }
 
@@ -54,6 +58,7 @@ public class OrderService {
                 item.setQuantity(item.getQuantity() - (orderDTO.getQuantity() - order.getQuantity()));
                 order.setItem(item);
                 order.setQuantity(orderDTO.getQuantity());
+                order.setTotalPrice(orderDTO.getQuantity() * item.getPrice());
                 orderRepository.saveAndFlush(order);
             }
             return orderDTO;
@@ -64,7 +69,8 @@ public class OrderService {
     public OrderDTO deleteOrder(UUID id){
         Order order = getOrderById(id);
         if (order.getStatus() == OrderStatus.SENT || order.getStatus() == OrderStatus.DELIVERED) throw new OrderIsLockedException();
-        else orderRepository.delete(order);
+        order.setIsDeleted(true);
+        orderRepository.saveAndFlush(order);
         return OrderConverter.orderToOrderDTO(order);
     }
 

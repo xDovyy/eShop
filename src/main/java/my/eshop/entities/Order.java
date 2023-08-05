@@ -22,11 +22,15 @@ public class Order {
     @Column(nullable = false)
     private Integer quantity;
     @Column
+    private Float totalPrice;
+    @Column
     private String address;
     @ManyToOne
     private User user;
     @ManyToOne
     private Item item;
+    @Column(nullable = false)
+    private Boolean isDeleted = false;
     @Enumerated(EnumType.STRING)
     private OrderStatus status;
     @Column(name = "created_at")

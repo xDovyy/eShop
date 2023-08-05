@@ -2,8 +2,10 @@ package my.eshop.controllers;
 
 import my.eshop.converters.UserConverter;
 import my.eshop.dtos.CreateUserDTO;
+import my.eshop.dtos.SellerDTO;
 import my.eshop.dtos.UserDTO;
 import my.eshop.entities.User;
+import my.eshop.enumerators.Role;
 import my.eshop.exceptions.CheckFailedException;
 import my.eshop.exceptions.DuplicateEmailException;
 import my.eshop.services.UserService;
@@ -17,12 +19,12 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.UUID;
 
 @CrossOrigin
 @RestController
 @RequestMapping("/users")
-@PreAuthorize("hasAnyRole('ADMIN', 'USER')")
 public class UserController {
 
     @Autowired
@@ -43,6 +45,7 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> getUserById(@PathVariable("id") UUID id){
         try {
             return ResponseEntity.status(HttpStatus.FOUND)
@@ -55,13 +58,17 @@ public class UserController {
 
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
-    public ResponseEntity<List<UserDTO>> getAllUsers(Pageable pageable) {
+    public ResponseEntity<List<UserDTO>> getAllUsers(@RequestParam(value = "name", required = false) String name, Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .body(this.userService.getAllUsers(pageable));
+                    .body(this.userService.getAllUsers(name, pageable));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        catch (NoSuchElementException e){
+            return ResponseEntity.status(HttpStatus.NO_CONTENT)
+                    .body(null);
         }
     }
 
@@ -78,6 +85,7 @@ public class UserController {
     }
 
     @PutMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDTO> updateUser(@RequestBody UserDTO userDTO){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getUserByEmail(auth.getName());
@@ -103,6 +111,7 @@ public class UserController {
     }
 
     @DeleteMapping
+    @PreAuthorize("hasRole('USER')")
     public ResponseEntity<UserDTO> deleteUser(@RequestBody String password){
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         User user = userService.getUserByEmail(auth.getName());
@@ -112,6 +121,26 @@ public class UserController {
         }
         catch (CheckFailedException e){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+    }
+
+    @PutMapping("/sell")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> updateSeller(@RequestBody SellerDTO sellerDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
+        if (!(user.getRole() == Role.USER || user.getRole() == Role.SELLER)) return ResponseEntity.status(HttpStatus.FORBIDDEN).body(sellerDTO);
+        sellerDTO.setId(user.getId());
+        try {
+            if (user.getRole() != Role.SELLER){
+                return ResponseEntity.status(HttpStatus.ACCEPTED)
+                        .body(userService.becomeSeller(sellerDTO));
+            }
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(userService.updateSeller(sellerDTO));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(sellerDTO);
         }
     }
 

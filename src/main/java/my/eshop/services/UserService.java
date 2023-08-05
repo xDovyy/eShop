@@ -2,6 +2,7 @@ package my.eshop.services;
 
 import lombok.AllArgsConstructor;
 import my.eshop.converters.UserConverter;
+import my.eshop.dtos.SellerDTO;
 import my.eshop.dtos.CreateUserDTO;
 import my.eshop.dtos.UserDTO;
 import my.eshop.entities.User;
@@ -40,7 +41,7 @@ public class UserService {
 
     public User getUserById(UUID id){
         if (id == null) throw new IllegalArgumentException();
-        return userRepository.findById(id).orElse(null);
+        return userRepository.findByID(id);
     }
 
     public UserDTO updateUser(UUID id, UserDTO userDTO){
@@ -56,7 +57,9 @@ public class UserService {
     public UserDTO deleteUser(UUID id){
         User user = getUserById(id);
         if (user == null) throw new NoSuchElementException();
-        userRepository.delete(user);
+        user.setIsDeleted(true);
+        user.setEmail(user.getId()+user.getEmail());
+        userRepository.saveAndFlush(user);
         return UserConverter.userTouserDTO(user);
     }
 
@@ -65,15 +68,46 @@ public class UserService {
         else throw new CheckFailedException();
     }
 
-    public List<UserDTO> getAllUsers(Pageable pageable){
+    public List<UserDTO> getAllUsers(String name, Pageable pageable){
         if (pageable != null) {
-            return UserConverter.userListTouserDTOList(userRepository.findAll(pageable));
+            List<UserDTO> userDTOList;
+            if (name != null) userDTOList = UserConverter.userListTouserDTOList(userRepository.findAllByNameLike(name + "%", pageable));
+            else userDTOList = UserConverter.userListTouserDTOList(userRepository.findAll(pageable));
+            if (userDTOList != null && !userDTOList.isEmpty()) return userDTOList;
+            else throw new NoSuchElementException();
         }
         return UserConverter.userListTouserDTOList(userRepository.findAll());
     }
 
     public User getUserByEmail(String email){
         return userRepository.findByEmail(email);
+    }
+
+    public UserDTO becomeSeller(SellerDTO sellerDTO){
+        if (sellerDTO != null){
+            User user = userRepository.findById(sellerDTO.getId()).orElse(null);
+            if (user != null && (sellerDTO.getAddress() != null && sellerDTO.getPhone() != null)){
+                    user.setAddress(sellerDTO.getAddress());
+                    user.setPhone(sellerDTO.getPhone());
+                    user.setRole(Role.SELLER);
+                    userRepository.saveAndFlush(user);
+                    return UserConverter.userTouserDTO(user);
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public UserDTO updateSeller(SellerDTO sellerDTO){
+        if (sellerDTO != null){
+            User user = userRepository.findById(sellerDTO.getId()).orElse(null);
+            if (user != null && (sellerDTO.getAddress() != null && sellerDTO.getPhone() != null)){
+                    user.setAddress(sellerDTO.getAddress());
+                    user.setPhone(sellerDTO.getPhone());
+                    userRepository.saveAndFlush(user);
+                    return UserConverter.userTouserDTO(user);
+            }
+        }
+        throw new IllegalArgumentException();
     }
 
 }

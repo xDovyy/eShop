@@ -12,6 +12,8 @@ public class OrderConverter {
     public static OrderDTO orderToOrderDTO(Order order){
         if (order == null) throw new IllegalArgumentException();
         OrderDTO orderDTO = new OrderDTO();
+        orderDTO.setId(order.getId());
+        orderDTO.setQuantity(orderDTO.getQuantity());
         return orderDTO;
     }
 
