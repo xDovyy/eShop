@@ -1,9 +1,7 @@
 package my.eshop.converters;
 
 import my.eshop.dtos.ItemDTO;
-import my.eshop.dtos.OrderDTO;
 import my.eshop.entities.Item;
-import my.eshop.entities.Order;
 import org.springframework.data.domain.Page;
 
 import java.util.ArrayList;
@@ -35,7 +33,7 @@ public class ItemConverter {
     }
 
     public static List<ItemDTO> itemListToItemDTOList(List<Item> itemList){
-        if (itemList != null && !itemList.isEmpty()){
+        if (itemList != null){
             List<ItemDTO> itemDTOList = new ArrayList<>();
             for (Item item:itemList){
                 ItemDTO itemDTO = new ItemDTO();

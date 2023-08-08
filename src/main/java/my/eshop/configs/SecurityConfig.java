@@ -22,6 +22,8 @@ public class SecurityConfig {
         http.csrf()
                 .disable()
                 .authorizeRequests()
+                    .antMatchers("/swagger-ui/**")
+                    .hasAnyRole("ADMIN")
                     .expressionHandler(webExpressionHandler())
                     .anyRequest()
                     .permitAll()

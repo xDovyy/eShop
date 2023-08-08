@@ -98,6 +98,20 @@ public class UserController {
         }
     }
 
+    @PutMapping("/password")
+    @PreAuthorize("hasRole('USER')")
+    public ResponseEntity<UserDTO> updateUserPassword(@RequestBody CreateUserDTO userDTO){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(userService.updateUserPassword(user, userDTO));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
     @DeleteMapping("/{id}")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDTO> deleteUser(@PathVariable("id") UUID id){

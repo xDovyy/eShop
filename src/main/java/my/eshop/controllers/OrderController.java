@@ -1,9 +1,8 @@
 package my.eshop.controllers;
 
-import my.eshop.converters.ItemConverter;
 import my.eshop.converters.OrderConverter;
 import my.eshop.dtos.CreateOrderDTO;
-import my.eshop.dtos.ItemDTO;
+import my.eshop.dtos.FullOrderDTO;
 import my.eshop.dtos.OrderDTO;
 import my.eshop.entities.User;
 import my.eshop.services.ItemService;
@@ -71,6 +70,34 @@ public class OrderController {
         }
     }
 
+    @GetMapping("/my")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<List<FullOrderDTO>> getUserOrders(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
+        try {
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .body(this.orderService.getUserOrders(user));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @GetMapping("/sell")
+    @PreAuthorize("hasAnyRole('SELLER')")
+    public ResponseEntity<List<FullOrderDTO>> getSellerOrders(){
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        User user = userService.getUserByEmail(auth.getName());
+        try{
+            return ResponseEntity.status(HttpStatus.FOUND)
+                    .body(this.orderService.getSellerOrders(user));
+        }
+        catch (IllegalArgumentException e){
+            return  ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
     @PutMapping("/{id}")
     @PreAuthorize("hasAnyRole('ADMIN')")
     public ResponseEntity<OrderDTO> updateOrder(@PathVariable("id") UUID id, @RequestBody OrderDTO orderDTO){
@@ -89,6 +116,18 @@ public class OrderController {
         try {
             return ResponseEntity.status(HttpStatus.ACCEPTED)
                     .body(orderService.deleteOrder(id));
+        }
+        catch (IllegalArgumentException e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+    }
+
+    @PutMapping("/order/{id}")
+    @PreAuthorize("hasAnyRole('USER')")
+    public ResponseEntity<FullOrderDTO> orderOrder(@PathVariable("id") UUID id, @RequestBody String address){
+        try {
+            return ResponseEntity.status(HttpStatus.ACCEPTED)
+                    .body(orderService.orderOrder(id, address));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

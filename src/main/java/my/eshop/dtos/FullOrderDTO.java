@@ -10,7 +10,6 @@ public class FullOrderDTO extends OrderDTO{
     private UUID itemId;
     private String itemName;
     private Float itemPrice;
-    private String description;
     private UUID sellerId;
     private UUID buyerId;
 
