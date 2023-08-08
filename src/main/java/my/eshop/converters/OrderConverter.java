@@ -1,6 +1,8 @@
 package my.eshop.converters;
 
+import my.eshop.dtos.FullOrderDTO;
 import my.eshop.dtos.OrderDTO;
+import my.eshop.entities.Item;
 import my.eshop.entities.Order;
 import org.springframework.data.domain.Page;
 
@@ -25,7 +27,7 @@ public class OrderConverter {
     }
 
     public static List<OrderDTO> orderListToOrderDTOList(List<Order> orderList){
-        if (orderList != null && !orderList.isEmpty()){
+        if (orderList != null){
             List<OrderDTO> orderDTOList = new ArrayList<>();
             for (Order order:orderList){
                 orderDTOList.add(orderToOrderDTO(order));
@@ -44,6 +46,33 @@ public class OrderConverter {
             }
         }
         return orderDTOList;
+    }
+
+    public static FullOrderDTO orderToFullOrderDTO(Order order){
+        if (order != null){
+            FullOrderDTO fullOrderDTO = new FullOrderDTO();
+            fullOrderDTO.setId(order.getId());
+            fullOrderDTO.setQuantity(order.getQuantity());
+            Item item = order.getItem();
+            fullOrderDTO.setItemId(item.getId());
+            fullOrderDTO.setItemName(item.getName());
+            fullOrderDTO.setItemPrice(item.getPrice());
+            fullOrderDTO.setBuyerId(order.getUser().getId());
+            fullOrderDTO.setSellerId(item.getSeller().getId());
+            return fullOrderDTO;
+        }
+        throw new IllegalArgumentException();
+    }
+
+    public static List<FullOrderDTO> orderToFullOrderDTOList(List<Order> orders){
+        if (orders != null){
+            List<FullOrderDTO> fullOrderDTOList = new ArrayList<>();
+            for (Order order: orders){
+                fullOrderDTOList.add(orderToFullOrderDTO(order));
+            }
+            return fullOrderDTOList;
+        }
+        throw new IllegalArgumentException();
     }
 
 }

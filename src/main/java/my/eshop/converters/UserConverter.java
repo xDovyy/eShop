@@ -29,7 +29,7 @@ public class UserConverter {
     }
 
     public static List<UserDTO> userListTouserDTOList(List<User> userList){
-        if (userList != null && !userList.isEmpty()){
+        if (userList != null){
             List<UserDTO> userDTOList = new ArrayList<>();
             for (User user:userList){
                 userDTOList.add(userTouserDTO(user));

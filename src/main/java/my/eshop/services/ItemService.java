@@ -46,8 +46,12 @@ public class ItemService {
         return itemRepository.findByID(id);
     }
 
-    public List<ItemDTO> getItems(Pageable pageable){
+    public List<ItemDTO> getItems(String category, Pageable pageable){
         if (pageable != null) {
+            if (category != null){
+                return ItemConverter.itemListToItemDTOList(itemRepository.
+                        findAllByCategory(categoryRepository.findById(category.toLowerCase()).orElse(null), pageable));
+            }
             return ItemConverter.itemListToItemDTOList(itemRepository.findAll(pageable));
         }
         return ItemConverter.itemListToItemDTOList(itemRepository.findAll());

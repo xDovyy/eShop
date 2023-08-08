@@ -55,10 +55,10 @@ public class ItemController {
     }
 
     @GetMapping
-    public ResponseEntity<List<ItemDTO>> getAllItems(Pageable pageable) {
+    public ResponseEntity<List<ItemDTO>> getAllItems(@RequestParam(value = "category", required = false) String category, Pageable pageable) {
         try {
             return ResponseEntity.status(HttpStatus.FOUND)
-                    .body(this.itemService.getItems(pageable));
+                    .body(this.itemService.getItems(category, pageable));
         }
         catch (IllegalArgumentException e){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);

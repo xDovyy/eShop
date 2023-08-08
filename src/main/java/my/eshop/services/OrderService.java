@@ -2,6 +2,7 @@ package my.eshop.services;
 
 import lombok.AllArgsConstructor;
 import my.eshop.converters.OrderConverter;
+import my.eshop.dtos.FullOrderDTO;
 import my.eshop.dtos.OrderDTO;
 import my.eshop.entities.Item;
 import my.eshop.entities.Order;
@@ -9,9 +10,11 @@ import my.eshop.entities.User;
 import my.eshop.enumerators.OrderStatus;
 import my.eshop.exceptions.OrderIsLockedException;
 import my.eshop.repositories.OrderRepository;
+import my.eshop.repositories.UserRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
@@ -48,6 +51,18 @@ public class OrderService {
         return OrderConverter.orderListToOrderDTOList(orderRepository.findAll());
     }
 
+    public List<FullOrderDTO> getUserOrders(User user){
+        return OrderConverter.orderToFullOrderDTOList(user.getOrders());
+    }
+
+    public List<FullOrderDTO> getSellerOrders(User user){
+        List<Order> orderList = new ArrayList<>();
+        for (Item item: user.getItems()){
+            orderList.addAll(orderRepository.findByItem(item));
+        }
+        return OrderConverter.orderToFullOrderDTOList(orderList);
+    }
+
     public OrderDTO updateOrder(UUID id, OrderDTO orderDTO){
         Order order = getOrderById(id);
         if(order.getStatus() != OrderStatus.ADDED) throw new OrderIsLockedException();
@@ -74,13 +89,14 @@ public class OrderService {
         return OrderConverter.orderToOrderDTO(order);
     }
 
-    public void orderOrder(UUID id, String address){
+    public FullOrderDTO orderOrder(UUID id, String address){
         Order order = getOrderById(id);
         if (address == null) throw new IllegalArgumentException();
         order.setAddress(address);
         if (order.getStatus() == OrderStatus.ADDED) order.setStatus(OrderStatus.ORDERED);
         else throw new OrderIsLockedException();
         orderRepository.saveAndFlush(order);
+        return OrderConverter.orderToFullOrderDTO(order);
     }
 
     public void payOrder(UUID id){

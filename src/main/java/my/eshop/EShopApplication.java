@@ -10,8 +10,6 @@ public class EShopApplication {
         SpringApplication.run(EShopApplication.class, args);
     }
 
-    //TODO Password check, email check.
-    //TODO Front end
-    //TODO fix security
+    //TODO implement order status change*
 
 }
