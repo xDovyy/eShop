@@ -1,0 +1,621 @@
+{
+	"info": {
+		"_postman_id": "c1fd7530-5778-4d9c-bd86-7d7f8aa4acb7",
+		"name": "eShop",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "27883473"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "createUser",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{url}}exams",
+							"host": [
+								"{{url}}exams"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserById",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": []
+				},
+				{
+					"name": "getUsers",
+					"request": {
+						"method": "GET",
+						"header": []
+					},
+					"response": [
+						{
+							"name": "getUsersByName",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}users?name=Dovywadad",
+									"host": [
+										"{{url}}users"
+									],
+									"query": [
+										{
+											"key": "name",
+											"value": "Dovywadad"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "updateUserById",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"503a7f01-e45f-47e7-bd6c-3a03deb779e2\",\r\n    \"name\": \"Dovydas\",\r\n    \"surname\": \"Pavilionis\",\r\n    \"email\": \"contact@dovypav.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUser",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"503a7f01-e45f-47e7-bd6c-3a03deb779e2\",\r\n    \"name\": \"Dovydas\",\r\n    \"surname\": \"Pavilionis\",\r\n    \"email\": \"contact@dovypav.com\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateUserPassword",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUserById",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "xDovyy",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "contact@dovypav.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteUser",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "xDovyy",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "contact@dovypav.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}users",
+							"host": [
+								"{{url}}users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "becomeSeller/updateSeller",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "hseg@dovypav.com",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "xDovyy",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"address\" : \"Vaižganto g. 56\",\r\n    \"phone\" : \"+37062805189\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}users/sell",
+							"host": [
+								"{{url}}users"
+							],
+							"path": [
+								"sell"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Items",
+			"item": [
+				{
+					"name": "createItem",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"telefas\",\r\n    \"price\": 1547.47,\r\n    \"description\": \"daužtas kaip ir tu\",\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}items",
+							"host": [
+								"{{url}}items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllItems",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}items",
+							"host": [
+								"{{url}}items"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "getAllItems",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}items?category=Elektronika",
+									"host": [
+										"{{url}}items"
+									],
+									"query": [
+										{
+											"key": "category",
+											"value": "Elektronika"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "getItemById",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{url}}items/:id",
+									"host": [
+										"{{url}}items"
+									],
+									"path": [
+										":id"
+									],
+									"variable": [
+										{
+											"key": "id",
+											"value": "0186fb11-f136-4af2-ae62-c316d48b47b1"
+										}
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
+				},
+				{
+					"name": "getUserItems",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}items/user",
+							"host": [
+								"{{url}}items"
+							],
+							"path": [
+								"user"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateItem",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "string"
+								},
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"18b188a9-2189-43a0-a6e2-40024bccf4c4\",\r\n    \"name\": \"SamsungA8\",\r\n    \"price\": 1547.47,\r\n    \"description\": \"daužtas kaip ir tu\",\r\n    \"quantity\": 1,\r\n    \"category\": \"Elektronika\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}items",
+							"host": [
+								"{{url}}items"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteItem",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}items",
+							"host": [
+								"{{url}}items"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Orders",
+			"item": [
+				{
+					"name": "createOrder",
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "xDovyy",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "contact@dovypav.com",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"itemId\": \"0186fb11-f136-4af2-ae62-c316d48b47b1\",\r\n    \"quantity\": 1\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}orders",
+							"host": [
+								"{{url}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getOrderById",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "basic",
+							"basic": [
+								{
+									"key": "password",
+									"value": "{{password}}",
+									"type": "string"
+								},
+								{
+									"key": "username",
+									"value": "{{email}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}orders/:id",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getAllOrders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}/orders",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getUserOrders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders",
+							"host": [
+								"{{url}}orders"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "getSellerOrders",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders/sell",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								"sell"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "updateOrder",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders/:id",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "deleteOrder",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{url}}orders/:id",
+							"host": [
+								"{{url}}orders"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": null
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
