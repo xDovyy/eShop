@@ -27,8 +27,7 @@ public class UserService {
 
     private PasswordEncoder encoder;
     private UserRepository userRepository;
-    private static final String emailRegex = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\\\.[A-Za-z0-9_-]+)*@\" \n" +
-            "{7} + \"[^-][A-Za-z0-9-]+(\\\\.[A-Za-z0-9-]+)*(\\\\.[A-Za-z]{2,})$";
+    private static final String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
 
     public CreateUserDTO createUser(CreateUserDTO userDTO){
         if (!userDTO.getPassword().equals(userDTO.getPasswordCheck()) || userDTO.getPassword().length() < 8) throw new InvalidPasswordException();
@@ -52,7 +51,7 @@ public class UserService {
 
     public UserDTO updateUser(UUID id, UserDTO userDTO){
         User user = getUserById(id);
-        if (!userDTO.getEmail().matches(emailRegex)) throw new InvalidEmailException();
+        if (userDTO.getEmail() != null && !userDTO.getEmail().matches(emailRegex)) throw new InvalidEmailException();
         if (user == null) throw new NoSuchElementException();
         if (userDTO.getSurname() != null) user.setSurname(userDTO.getSurname());
         if (userDTO.getEmail() != null) user.setEmail(userDTO.getEmail());
